@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  back:
+    build:
+      dockerfile: Dockerfile
+      context: ./back
+      target: development
+
+    volumes:
+      - ./back:/ilmir/src/app
+      - ./ilmir/src/app/node_modules/
+
+    command: npm run start:dev
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgres://user:qwerty@postgres:5432/db
+    ports:
+      - "3000:3000"
+  postgres:
+    image: postgres:14.4
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: qwerty
+      POSTGRES_DB: db
+    ports:
+      - 35000:5432
+
+  postgres_admin:
+    image: dpage/pgadmin4:6.12
+    depends_on:
+      - postgres
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: qwerty
+
+    ports:
+      - 5050:80

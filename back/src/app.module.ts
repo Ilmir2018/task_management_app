@@ -18,7 +18,5 @@ import { UserModule } from './user/user.module';
       synchronize: true,
     }),
   ],
-  controllers: [],
-  providers: [],
 })
 export class AppModule {}

@@ -6,7 +6,6 @@ services:
       dockerfile: Dockerfile
       context: ./front
       target: development
-
     volumes:
       - ./front:/ilmir/src/app
       - ./ilmir/src/app/node_modules
@@ -15,22 +14,20 @@ services:
       - "4200:4200"
     depends_on:
       - back
-
   back:
     build:
       dockerfile: Dockerfile
       context: ./back
       target: development
-
     volumes:
       - ./back:/ilmir/src/app
       - ./ilmir/src/app/node_modules/
-
     command: npm run start:dev
     depends_on:
       - postgres
     environment:
       DATABASE_URL: postgres://user:qwerty@postgres:5432/db
+      JWT_SECRET: hejbvhqerbvhiejrbf348571094
     ports:
       - "3000:3000"
   postgres:
@@ -41,7 +38,6 @@ services:
       POSTGRES_DB: db
     ports:
       - 35000:5432
-
   postgres_admin:
     image: dpage/pgadmin4:6.12
     depends_on:
@@ -49,6 +45,5 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: qwerty
-
     ports:
       - 5050:80

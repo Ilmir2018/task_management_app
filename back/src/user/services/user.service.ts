@@ -72,6 +72,12 @@ export class UserService {
     });
   }
 
+  async getOne(id: number): Promise<UserI> {
+    return this.userRepository.findOneOrFail({
+      where: { id: id },
+    });
+  }
+
   private async mailExists(email: string): Promise<boolean> {
     const user = await this.userRepository.findOne({ where: { email: email } });
     return !!user;

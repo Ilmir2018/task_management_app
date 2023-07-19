@@ -7,11 +7,11 @@ services:
       context: ./front
       target: development
     volumes:
-      - ./front:/ilmir/src/app
-      - ./ilmir/src/app/node_modules
+      - ./front:/ilmir/front/src/app
+      - /ilmir/front/src/app/node_modules
     command: npm run start
     ports:
-      - "4200:4200"
+      - 4200:4200
     depends_on:
       - back
   back:
@@ -21,7 +21,7 @@ services:
       target: development
     volumes:
       - ./back:/ilmir/src/app
-      - ./ilmir/src/app/node_modules/
+      - /ilmir/src/app/node_modules/
     command: npm run start:dev
     depends_on:
       - postgres

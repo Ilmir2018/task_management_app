@@ -52,6 +52,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.todoService.sendMessage();
+    this.todoService.getTodos();
 
     this.backlogItems = this.items.filter((item) => item.status === 'BACKLOG');
     this.todoItems = this.items.filter((item) => item.status === 'TODO');

@@ -1,8 +1,10 @@
+import { Connection } from 'src/todo/entities/connection.entity';
 import {
   BeforeInsert,
   BeforeUpdate,
   Column,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -19,6 +21,9 @@ export class User {
 
   @Column({ select: false })
   password: string;
+
+  @OneToMany(() => Connection, (connection) => connection.connectedUser)
+  connections: Connection[];
 
   @BeforeInsert()
   @BeforeUpdate()

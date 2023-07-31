@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
-import { async } from 'rxjs';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { AuthService } from './services/auth/auth.service';
 import { JwtStrategy } from './strategies/jwt.strategy';

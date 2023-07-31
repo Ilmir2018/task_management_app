@@ -3,20 +3,28 @@ import {
   OnGatewayConnection,
   OnGatewayDisconnect,
   WebSocketGateway,
+  WebSocketServer,
 } from '@nestjs/websockets';
-import { Socket } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import { AuthService } from 'src/auth/services/auth/auth.service';
 import { UserI } from 'src/user/entities/user.interfaces';
 import { UserService } from 'src/user/services/user.service';
+import { ConnectionService } from '../services/connection/connection.service';
+import { TodoService } from '../services/todo/todo.service';
 
 @WebSocketGateway({
   namespace: 'todos',
   cors: { origin: ['http://localhost:4200'] },
 })
 export class TodoGateway implements OnGatewayConnection, OnGatewayDisconnect {
+  @WebSocketServer()
+  server: Server;
+
   constructor(
     private authService: AuthService,
     private userService: UserService,
+    private connectionService: ConnectionService,
+    private todoService: TodoService,
   ) {}
 
   async handleConnection(socket: Socket) {
@@ -29,7 +37,14 @@ export class TodoGateway implements OnGatewayConnection, OnGatewayDisconnect {
         console.log('disconnect user');
         return this.disconnect(socket);
       } else {
-        console.log('Connected user', user);
+        await this.connectionService.create({
+          socketId: socket.id,
+          connectedUser: user,
+        });
+
+        const todos = await this.todoService.findAll();
+
+        return this.server.to(socket.id).emit('todos', todos);
       }
     } catch {
       console.log('disconnect user');
@@ -43,6 +58,7 @@ export class TodoGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   async handleDisconnect(socket: Socket) {
+    await this.connectionService.deleteBySocketId(socket.id);
     socket.disconnect();
   }
 }

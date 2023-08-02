@@ -5,7 +5,9 @@ import {
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
-import { TodoI } from '../../iterfaces';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { TodoI } from '../../private-module.iterfaces';
+import { CreateTodoComponent } from '../create-todo/create-todo.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,46 +19,17 @@ export class DashboardComponent implements OnInit {
   todoItems: TodoI[] = [];
   doneItems: TodoI[] = [];
 
-  items: TodoI[] = [
-    {
-      title: 'Hard Item',
-      complexity: 'HARD',
-      subTitle: 'Hard Subtitle',
-      text: 'Hard Text',
-      status: 'BACKLOG',
-    },
-    {
-      title: 'Medium Item',
-      complexity: 'MEDIUM',
-      subTitle: 'Medium Subtitle',
-      text: 'Medium Text',
-      status: 'TODO',
-    },
-    {
-      title: 'Easy Item',
-      complexity: 'EASY',
-      subTitle: 'Easy Subtitle',
-      text: 'Easy Text',
-      status: 'DONE',
-    },
-    {
-      title: 'Hard Item',
-      complexity: 'HARD',
-      subTitle: 'Hard Subtitle',
-      text: 'Hard Text',
-      status: 'BACKLOG',
-    },
-  ];
+  createTodoComponentDialogRef: MatDialogRef<CreateTodoComponent> | undefined;
 
-  constructor(private todoService: TodoService) {}
+  constructor(private todoService: TodoService, private matDialog: MatDialog) {}
 
   ngOnInit(): void {
     this.todoService.sendMessage();
-    this.todoService.getTodos();
-
-    this.backlogItems = this.items.filter((item) => item.status === 'BACKLOG');
-    this.todoItems = this.items.filter((item) => item.status === 'TODO');
-    this.doneItems = this.items.filter((item) => item.status === 'DONE');
+    this.todoService.getTodos().then((items: TodoI[]) => {
+      this.backlogItems = items.filter((item) => item.status === 'BACKLOG');
+      this.todoItems = items.filter((item) => item.status === 'TODO');
+      this.doneItems = items.filter((item) => item.status === 'DONE');
+    });
   }
 
   drop(event: CdkDragDrop<TodoI[]>) {
@@ -74,5 +47,15 @@ export class DashboardComponent implements OnInit {
         event.currentIndex
       );
     }
+  }
+
+  onShowCreateTodoDilaog() {
+    this.createTodoComponentDialogRef = this.matDialog.open(
+      CreateTodoComponent,
+      {
+        minHeight: '400px',
+        minWidth: '300px',
+      }
+    );
   }
 }

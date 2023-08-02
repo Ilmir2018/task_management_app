@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { TodoI } from '../../iterfaces';
+import { TodoI } from '../../private-module.iterfaces';
 
 @Component({
   selector: 'app-card',

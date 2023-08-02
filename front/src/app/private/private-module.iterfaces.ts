@@ -1,3 +1,4 @@
+import { FormControl } from '@angular/forms';
 import { UserI } from '../public/public.interfaces';
 
 export type Status = 'BACKLOG' | 'TODO' | 'DONE';
@@ -17,4 +18,12 @@ export interface TodoI {
   text: string;
 
   complexity: Complexity;
+}
+
+export interface CreateTodoFormGroup {
+  title: FormControl<string | null>;
+  subTitle: FormControl<string | null>;
+  text: FormControl<string | null>;
+  status: FormControl<Status | null>;
+  complexity: FormControl<Complexity | null>;
 }
